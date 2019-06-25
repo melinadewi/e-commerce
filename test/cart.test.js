@@ -49,23 +49,23 @@ describe('Cart CRUD', function() {
                     });
             })
         })
-    })
-    describe('POST /cart error', function(){
-        describe('POST /cart not by authorized user', function() {
-            it('should throw an error of unauthorized user', function(done){
-                chai.request(app)
-                    .post('/cart')
-                    .send({ item: 'laptop' })
-                    .then(function(res){})
-                    .catch(function(err) {
-                        err.should.have.property('status')
-                        err.status.should.be.a('number')
-                        err.status.should.equal(401)
-                        err.should.have.property('message')
-                        err.message.should.be.a('string')
-                        err.message.should.equal('User not logged in')
-                        done()
-                    });
+        describe('POST /cart error', function(){
+            describe('POST /cart not by authorized user', function() {
+                it('should throw an error of unauthorized user', function(done){
+                    chai.request(app)
+                        .post('/cart')
+                        .send({ item: 'laptop' })
+                        .then(function(res){})
+                        .catch(function(err) {
+                            err.should.have.property('status')
+                            err.status.should.be.a('number')
+                            err.status.should.equal(401)
+                            err.should.have.property('message')
+                            err.message.should.be.a('string')
+                            err.message.should.equal('User not logged in')
+                            done()
+                        });
+                })
             })
         })
     })
