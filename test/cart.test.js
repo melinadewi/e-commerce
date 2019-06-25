@@ -83,6 +83,24 @@ describe('Cart CRUD', function() {
                     console.log(err);
                 });
         })
+        describe('GET /cart error', function() {
+            describe('GET /cart not by authorized user', function() {
+                it('should throw an error of unauthorized user', function(done){
+                    chai.request(app)
+                        .get('/cart')
+                        .then(function(res){})
+                        .catch(function(err) {
+                            err.should.have.property('status')
+                            err.status.should.be.a('number')
+                            err.status.should.equal(401)
+                            err.should.have.property('message')
+                            err.message.should.be.a('string')
+                            err.message.should.equal('User not logged in')
+                            done()
+                        });
+                })
+            })
+        })
     })
     
     describe('PATCH /cart', function() {
@@ -114,7 +132,7 @@ describe('Cart CRUD', function() {
                             err.status.should.equal(401)
                             err.should.have.property('message')
                             err.message.should.be.a('string')
-                            err.message.should.equal('User not logged in')
+                            err.message.should.equal('Cart not found')
                             done()
                         });
                 })
