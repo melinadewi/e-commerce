@@ -21,20 +21,11 @@ module.exports = {
             })
         }
     },
-    authorization(req, res, next){
-        console.log(req.params.id)
-        ModelName.findByPk(req.params.id)
-            .then(task => {
-                if(task){
-                    if(task.UserId === req.decode.id){
-                        next()
-                    } else {
-                        throw {status: 401}
-                    }
-                } else {
-                    throw {status: 404}
-                }
-            })
-            .catch(next)
-    }
+    authorization(req, res, next){        
+        if('admin' === req.decode.username){
+            next()
+        } else {
+            throw {status: 401}
+        }
+    }     
 }

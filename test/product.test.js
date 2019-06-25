@@ -5,18 +5,31 @@ chai.use(chaiHttp)
 const app = require('../app')
 let id
 let token
-const should = chai.should()
+chai.should()
 
+const testProduct = {
+    name: 'S430FN',
+    description: `laptop`,
+    price: 14200000,
+    stock: 5
+}
 
-describe('Login admin', function(){
-    it('Admin login', function(){
+const { clearProduct } = require('../helpers/clearMocha')
+after(function(done){
+    clearProduct(testProduct, done)
+})
+
+describe.only('Login admin', function(){
+    it('Admin login', function(done){
         chai.request(app)
             .post('/user/login')
-            .send({ email: '',
-                    password: '',
+            .send({ 
+                email: 'admin@mail.com',
+                password: 'adminSuper'
             })
             .then((res)=>{
                 token = res.token
+                done()
             })
             .catch(err=>{
                 console.log(err)
@@ -31,10 +44,7 @@ describe('Product CRUD', function() {
                 chai.request(app)
                     .post('/product')
                     .set('token', token)
-                    .send({ name: 'S430FN',
-                            description: `laptop`,
-                            price: 14200000,
-                            stock: 5})
+                    .send(testProduct)
                     .then(function(res){
                         res.status.should.equal(201)
                         res.body.should.be.an('object')
