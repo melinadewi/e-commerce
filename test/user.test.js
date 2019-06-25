@@ -6,15 +6,19 @@ const app = require('../app')
 chai.should()
 
 const newUser = {
-    username: 'user5',
-    email: 'mail5@mail.com',
+    username: 'user3',
+    email: 'mail3@mail.com',
     password: '123456'
 }
 
+const { username, email } = newUser
+const deleteUser = {
+    username,
+    email
+}
 const { clearUser } = require('../helpers/clearMocha')
-
-after(function(){
-    clearUser(newUser)
+after(function(done){
+    clearUser(deleteUser, done)
 })
 
 describe('Register, Login, and Logout User', function(){
