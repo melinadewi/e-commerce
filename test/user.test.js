@@ -6,10 +6,16 @@ const app = require('../app')
 chai.should()
 
 const newUser = {
-    username: 'user4',
-    email: 'mail4@mail.com',
+    username: 'user5',
+    email: 'mail5@mail.com',
     password: '123456'
 }
+
+const { clearUser } = require('../helpers/clearMocha')
+
+after(function(){
+    clearUser(newUser)
+})
 
 describe('Register, Login, and Logout User', function(){
     this.timeout(10000)
@@ -155,7 +161,6 @@ describe('Register, Login, and Logout User', function(){
                                 email: 'fortestpurpose@mail.com',
                                 password: '1',
                         })
-                        // .then((res)=>{})
                         .then(err=>{
                             err.should.have.property('status')
                             err.status.should.be.a('number')
@@ -220,7 +225,6 @@ describe('Register, Login, and Logout User', function(){
                         .send({ email: newUser.email,
                                 password: '123',
                         })
-                        // .then(function(res){})
                         .then(function(err) {
                             err.should.have.property('status')
                             err.status.should.be.a('number')
@@ -231,7 +235,7 @@ describe('Register, Login, and Logout User', function(){
                             done()
                         })
                         .catch(err=>{
-                            console.log("ERROR")
+                            console.log(err)
                         })
                 })
             })
