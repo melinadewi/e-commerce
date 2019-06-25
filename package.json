@@ -1,13 +1,18 @@
 {
   "name": "e-commerce",
   "version": "1.0.0",
-  "description": "Route | HTTP | Header | Body | Response | Description | Validation -- | -- | -- | -- | -- | -- | -- `/product` | POST | token | { name, description, price, stock} | {_id, name, description, price, stock} | Input product info | - `/product/:productId` | GET | - | - | { _id, name, description, price, stock} | Read product info | - `/product/:productId` | PATCH | token | { name, description, price, stock} | { _id, name, description, price, stock } | Update product info | - `/product/:productId` | DELETE | token | - | - | Delete product info | - `/cart/:productId` | POST | token | - | [{products}] | Add product to cart | - `/cart/:productId` | DELETE | token | - | - | Remove product to cart | - `/user/register` | POST | - | {username, email, password} | 201 | Create an account | - `/user/login` | POST | - | { email, password } | - |Login | -",
+  "description": "E-Commerce",
   "main": "product.test.js",
   "directories": {
     "test": "test"
   },
   "scripts": {
-    "test": "NODE_ENV=test && npx mocha"
+    "test": "NODE_ENV=test npx mocha --exit",
+    "dev": "NODE_ENV=development nodemon app.js",
+    "start": "NODE_ENV=production node app.js",
+    "testWin": "SET \"NODE_ENV=test\" && npx mocha --exit",
+    "devWin": "SET \"NODE_ENV=development\" &&  nodemon app.js",
+    "startWin": "SET \"NODE_ENV=production\" &&  node app.js"
   },
   "repository": {
     "type": "git",
@@ -26,6 +31,10 @@
     "mocha": "^6.1.4"
   },
   "dependencies": {
-    "express": "^4.17.1"
+    "bcryptjs": "^2.4.3",
+    "dotenv": "^8.0.0",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.6.1"
   }
 }
