@@ -16,7 +16,6 @@ describe('Login admin', function(){
                     password: '',
             })
             .then((res)=>{
-                localStorage.setItem('token', res.token)
                 token = res.token
             })
             .catch(err=>{
@@ -31,6 +30,7 @@ describe('Product CRUD', function() {
             it('should send an object with 201 status code', function(done){
                 chai.request(app)
                     .post('/product')
+                    .set('token', token)
                     .send({ name: 'S430FN',
                             description: `laptop`,
                             price: 14200000,
@@ -65,6 +65,7 @@ describe('Product CRUD', function() {
             it('should throw an error when name is missing', function(done){
                 chai.request(app)
                     .post('/product')
+                    .set('token', token)
                     .send({ description: `laptop`,
                             price: 14200000,
                             stock: 5})
@@ -84,6 +85,7 @@ describe('Product CRUD', function() {
             it('should throw an error when description is missing', function(done){
                 chai.request(app)
                     .post('/product')
+                    .set('token', token)
                     .send({ name: 'S430FN',
                             price: 14200000,
                             stock: 5})
@@ -103,6 +105,7 @@ describe('Product CRUD', function() {
             it('should throw an error when price is missing', function(done){
                 chai.request(app)
                     .post('/product')
+                    .set('token', token)
                     .send({ name: 'S430FN',
                             description: `laptop`,
                             stock: 5})
@@ -122,6 +125,7 @@ describe('Product CRUD', function() {
             it('should throw an error when stock is missing', function(done){
                 chai.request(app)
                     .post('/product')
+                    .set('token', token)
                     .send({ name: 'S430FN',
                             description: `laptop`,
                             price: 14200000})
@@ -139,7 +143,6 @@ describe('Product CRUD', function() {
         })
         describe('POST /product not by authorized user', function() {
             it('should throw an error of unauthorized user', function(done){
-                localStorage.removeItem('token')
                 chai.request(app)
                     .post('/product')
                     .send({ name: 'S430FN',
@@ -154,7 +157,6 @@ describe('Product CRUD', function() {
                         err.should.have.property('message')
                         err.message.should.be.a('string')
                         err.message.should.equal('User not authorized')
-                        localStorage.setItem('token', token)
                         done()
                     });
             })
@@ -167,20 +169,20 @@ describe('Product CRUD', function() {
                 .get('/product')
                 .then(function(res){
                     res.body.should.be.an('array')
-                    res.body[0].should.have.property('_id')
-                    res.body[0]._id.should.equal(id)
-                    res.body[0].should.have.property('name')
-                    res.body[0].name.should.be.a('string')
-                    res.body[0].name.should.equal('S430FN')
-                    res.body[0].should.have.property('description')
-                    res.body[0].description.should.be.a('string')
-                    res.body[0].description.should.equal('laptop')
-                    res.body[0].should.have.property('price')
-                    res.body[0].price.should.be.a('number')
-                    res.body[0].price.should.equal(14200000)
-                    res.body[0].should.have.property('stock')
-                    res.body[0].stock.should.be.a('number')
-                    res.body[0].stock.should.equal(5)
+                    res.body[res.body.length - 1].should.have.property('_id')
+                    res.body[res.body.length - 1]._id.should.equal(id)
+                    res.body[res.body.length - 1].should.have.property('name')
+                    res.body[res.body.length - 1].name.should.be.a('string')
+                    res.body[res.body.length - 1].name.should.equal('S430FN')
+                    res.body[res.body.length - 1].should.have.property('description')
+                    res.body[res.body.length - 1].description.should.be.a('string')
+                    res.body[res.body.length - 1].description.should.equal('laptop')
+                    res.body[res.body.length - 1].should.have.property('price')
+                    res.body[res.body.length - 1].price.should.be.a('number')
+                    res.body[res.body.length - 1].price.should.equal(14200000)
+                    res.body[res.body.length - 1].should.have.property('stock')
+                    res.body[res.body.length - 1].stock.should.be.a('number')
+                    res.body[res.body.length - 1].stock.should.equal(5)
                     done()
                 })
                 .catch(function(err) {
@@ -240,6 +242,7 @@ describe('Product CRUD', function() {
             it('should update an object with 200 status code', function(done){
                 chai.request(app)
                     .patch(`/product/${id}`)
+                    .set('token', token)
                     .send({ description: `laptop baru`,
                             price: 1000})
                     .then(function(res){
@@ -270,6 +273,7 @@ describe('Product CRUD', function() {
                 it('should throw an error when product id is not in the list', function(done){
                     chai.request(app)
                         .patch(`/product/1`)
+                        .set('token', token)
                         .send({ description: `laptop baru`,
                                 price: 1000})
                         .then(function(res){})
@@ -286,7 +290,6 @@ describe('Product CRUD', function() {
             })
             describe('PATCH /product not by authorized user', function() {
                 it('should throw an error of unauthorized user', function(done){
-                    localStorage.removeItem('token')
                     chai.request(app)
                         .patch(`/product/1`)
                         .send({ description: `laptop baru`,
@@ -299,7 +302,6 @@ describe('Product CRUD', function() {
                             err.should.have.property('message')
                             err.message.should.be.a('string')
                             err.message.should.equal('User not authorized')
-                            localStorage.setItem('token', token)
                             done()
                         });
                 })
@@ -311,7 +313,8 @@ describe('Product CRUD', function() {
         describe('DELETE /product/:productId success', function() {
             it('should delete an object with 200 status code', function(done){
                 chai.request(app)
-                    .get(`/product/${id}`)
+                    .delete(`/product/${id}`)
+                    .set('token', token)
                     .then(function(res){
                         done()
                     })
@@ -324,7 +327,8 @@ describe('Product CRUD', function() {
             describe('DELETE /product/:productId not found', function() {
                 it('should throw an error when product id is not in the list', function(done){
                     chai.request(app)
-                        .get(`/product/${id}`)
+                        .delete(`/product/${id}`)
+                        .set('token', token)
                         .then(function(res){
                             done()
                         })
@@ -343,7 +347,7 @@ describe('Product CRUD', function() {
                 it('should throw an error of unauthorized user', function(done){
                     localStorage.removeItem('token')
                     chai.request(app)
-                        .get(`/product/${id}`)
+                        .delete(`/product/${id}`)
                         .then(function(res){
                             done()
                         })

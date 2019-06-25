@@ -5,7 +5,7 @@ chai.use(chaiHttp)
 const app = require('../app')
 const should = chai.should()
 
-describe('Register and Login User', function(){
+describe('Register, Login, and Logout User', function(){
     describe('POST /user/register', function(){
         describe('POST /user/register success', function(){
             it('should send an object with 201 status code', function(done){
