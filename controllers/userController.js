@@ -16,6 +16,7 @@ class UserController{
         const input = { username, email, password }
         User.create(input)
             .then(result => {
+                console.log("Result from user controller", result)
                 res.status(201).json(result)
             })
             .catch(next)
@@ -31,7 +32,7 @@ class UserController{
                         const payload = {
                             username: user.username,
                             email: user.email,
-                            id: user.id
+                            id: user._id
                         }
                         const token = generateToken(payload)
                         res.json({
@@ -39,10 +40,10 @@ class UserController{
                             username: user.username
                         })
                     } else {
-                        throw({code: 404, message: 'Email/Password invalid!'})
+                        throw({code: 400, message: 'Email/Password invalid!'})
                     }
                 } else {
-                    throw({code: 404, message: 'Email/Password invalid!'})
+                    throw({code: 400, message: 'Email/Password invalid!'})
                 }
             })
             .catch(next)

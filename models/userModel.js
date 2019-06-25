@@ -2,7 +2,10 @@ const mongoose = require('mongoose');
 const { hashPassword } = require('../helpers/bcrypt.js')
 
 const userSchema = new mongoose.Schema({
-  username: String,
+  username: {
+      type: String,
+      required: [ true, 'User must input username']
+  },
   email: {
     type: String,
     required: [ true, 'Email is required!' ],
@@ -35,7 +38,7 @@ password: {
 }
 }, {timestamps: true})
 
-UserSchema.pre('save', function(next){
+userSchema.pre('save', function(next){
   this.password = hashPassword(this.password)
   next()
 })
