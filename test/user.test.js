@@ -6,13 +6,13 @@ const app = require('../app')
 chai.should()
 
 const newUser = {
-    username: 'user3',
-    email: 'mail3@mail.com',
+    username: 'user4',
+    email: 'mail4@mail.com',
     password: '123456'
 }
 
 describe('Register, Login, and Logout User', function(){
-    this.timeout(5000)
+    this.timeout(10000)
     describe('POST /user/register', function(){
         describe('POST /user/register success', function(){
             it('should send an object with 201 status code', function(done){
@@ -20,7 +20,6 @@ describe('Register, Login, and Logout User', function(){
                     .post('/user/register')
                     .send(newUser)
                     .then((res)=>{
-                        console.log("Res status",res.status)
                         res.status.should.equal(201)
                         res.body.should.be.an('object')
                         res.body.should.have.property('_id')
@@ -35,7 +34,7 @@ describe('Register, Login, and Logout User', function(){
                         done()
                     })
                     .catch(err=>{
-                        console.log("Gagal")
+                        console.log(err)
                     })
             })
         })
@@ -45,21 +44,20 @@ describe('Register, Login, and Logout User', function(){
                 it('should throw an error when name is missing', function(done){
                     chai.request(app)
                         .post('/user/register')
-                        .send({ email: newUser.email,
+                        .send({ email: 'fortestpurpose@mail.com',
                                 password: newUser.password,
                         })
-                        // .then(function(res){})
                         .then(function(err) {
                             err.should.have.property('status')
                             err.status.should.be.a('number')
-                            err.status.should.equal(404)
-                            err.should.have.property('message')
-                            err.message.should.be.a('string')
-                            err.message.should.equal('User must input username')
+                            err.status.should.equal(400)
+                            err.body.should.have.property('message')                            
+                            err.body.message.should.be.a('string')
+                            err.body.message.should.equal('User validation failed: username: User must input username')
                             done()
                         })
                         .catch(err=>{
-                            console.log(err.status)
+                            console.log(err)
                         })
                 })
             })            
@@ -70,18 +68,17 @@ describe('Register, Login, and Logout User', function(){
                         .send({ username: newUser.username,
                                 password: newUser.password,
                         })
-                        // .then(function(res){})
                         .then(function(err) {
                             err.should.have.property('status')
                             err.status.should.be.a('number')
-                            err.status.should.equal(404)
-                            err.should.have.property('message')
-                            err.message.should.be.a('string')
-                            err.message.should.equal('Email is required!')
+                            err.status.should.equal(400)
+                            err.body.should.have.property('message')
+                            err.body.message.should.be.a('string')
+                            err.body.message.should.equal('User validation failed: email: Email is required!')
                             done()
                         })
                         .catch(err=>{
-                            console.log("ERROR")
+                            console.log(err)
                         })
                 })
             })
@@ -93,18 +90,17 @@ describe('Register, Login, and Logout User', function(){
                                 email: newUser.email,
                                 password: newUser.password,
                         })
-                        // .then(function(res){})
                         .then(function(err) {
                             err.should.have.property('status')
                             err.status.should.be.a('number')
-                            err.status.should.equal(404)
-                            err.should.have.property('message')
-                            err.message.should.be.a('string')
-                            err.message.should.equal('Email has been registered!')
+                            err.status.should.equal(400)
+                            err.body.should.have.property('message')
+                            err.body.message.should.be.a('string')
+                            err.body.message.should.equal('User validation failed: email: Email has been registered!')
                             done()
                         })
                         .catch(err=>{
-                            console.log("ERROR")
+                            console.log(err)
                         })
                 })
             })
@@ -116,18 +112,17 @@ describe('Register, Login, and Logout User', function(){
                                 email: 'mail1@',
                                 password: newUser.password,
                         })
-                        // .then(function(res){})
                         .then(function(err) {
                             err.should.have.property('status')
                             err.status.should.be.a('number')
-                            err.status.should.equal(404)
-                            err.should.have.property('message')
-                            err.message.should.be.a('string')
-                            err.message.should.equal('Email not valid!')
+                            err.status.should.equal(400)
+                            err.body.should.have.property('message')
+                            err.body.message.should.be.a('string')
+                            err.body.message.should.equal('User validation failed: email: Email not valid!')
                             done()
                         })
                         .catch(err=>{
-                            console.log("ERROR")
+                            console.log(err)
                         })
                 })
             })            
@@ -136,20 +131,19 @@ describe('Register, Login, and Logout User', function(){
                     chai.request(app)
                         .post('/user/register')
                         .send({ username: newUser.username,
-                                email: newUser.email,
+                                email: 'fortestpurpose@mail.com',
                         })
-                        // .then(function(res){})
                         .then(function(err) {
                             err.should.have.property('status')
                             err.status.should.be.a('number')
-                            err.status.should.equal(404)
-                            err.should.have.property('message')
-                            err.message.should.be.a('string')
-                            err.message.should.equal('Password is required')
+                            err.status.should.equal(400)
+                            err.body.should.have.property('message')
+                            err.body.message.should.be.a('string')
+                            err.body.message.should.equal('User validation failed: password: Password is required')
                             done()
                         })
                         .catch(err=>{
-                            console.log("ERROR")
+                            console.log(err)
                         })
                 })
             })
@@ -158,25 +152,25 @@ describe('Register, Login, and Logout User', function(){
                     chai.request(app)
                         .post('/user/register')
                         .send({ username: newUser.username,
-                                email: newUser.email,
+                                email: 'fortestpurpose@mail.com',
                                 password: '1',
                         })
                         // .then((res)=>{})
                         .then(err=>{
                             err.should.have.property('status')
                             err.status.should.be.a('number')
-                            err.status.should.equal(404)
-                            err.should.have.property('message')
-                            err.message.should.be.a('string')
-                            err.message.should.equal('Password minimum 6 characters')
+                            err.status.should.equal(400)
+                            err.body.should.have.property('message')
+                            err.body.message.should.be.a('string')
+                            err.body.message.should.equal('User validation failed: password: Password minimum 6 characters!')
                             done()
                         })
                         .catch(err=>{
-                            console.log("ERROR")
+                            console.log(err)
                         })
                 })
             })
-        })
+        })        
     })
 
     describe('POST /user/login', function(){
@@ -188,15 +182,14 @@ describe('Register, Login, and Logout User', function(){
                             password: newUser.password,
                     })
                     .then((res)=>{
+                        res.should.be.an('object')
                         res.status.should.equal(200)
-                        res.decode.should.be.an('object')
-                        res.decode.should.have.property('id')
-                        res.decode.should.have.property('username')
-                        res.decode.should.have.property('email')
+                        res.body.should.have.property('token')
+                        res.body.should.have.property('username')
                         done()
                     })
                     .catch(err=>{
-                        console.log("ERROR")
+                        console.log(err)
                     })
             })
         })
@@ -206,18 +199,17 @@ describe('Register, Login, and Logout User', function(){
                     chai.request(app)
                         .post('/user/login')
                         .send({ password: newUser.password })
-                        // .then(function(res){})
                         .then(function(err) {
                             err.should.have.property('status')
                             err.status.should.be.a('number')
-                            err.status.should.equal(404)
-                            err.should.have.property('message')
-                            err.message.should.be.a('string')
-                            err.message.should.equal('Email/Password invalid!')
+                            err.status.should.equal(400)
+                            err.body.should.have.property('message')
+                            err.body.message.should.be.a('string')
+                            err.body.message.should.equal('Email/Password invalid!')
                             done()
                         })
                         .catch(err=>{
-                            console.log("ERROR")
+                            console.log(err)
                         })
                 })
             })
@@ -232,10 +224,10 @@ describe('Register, Login, and Logout User', function(){
                         .then(function(err) {
                             err.should.have.property('status')
                             err.status.should.be.a('number')
-                            err.status.should.equal(404)
-                            err.should.have.property('message')
-                            err.message.should.be.a('string')
-                            err.message.should.equal('Email/Password invalid!')
+                            err.status.should.equal(400)
+                            err.body.should.have.property('message')
+                            err.body.message.should.be.a('string')
+                            err.body.message.should.equal('Email/Password invalid!')
                             done()
                         })
                         .catch(err=>{
