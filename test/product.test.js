@@ -76,7 +76,7 @@ describe('Product CRUD', function() {
                         err.status.should.equal(400)
                         err.should.have.property('message')
                         err.message.should.be.a('string')
-                        err.message.should.equal('Product mush have name')
+                        err.message.should.equal('Product must have name')
                         done()
                     });
             })
@@ -96,7 +96,7 @@ describe('Product CRUD', function() {
                         err.status.should.equal(400)
                         err.should.have.property('message')
                         err.message.should.be.a('string')
-                        err.message.should.equal('Product mush have description')
+                        err.message.should.equal('Product must have description')
                         done()
                     });
             })
@@ -116,7 +116,7 @@ describe('Product CRUD', function() {
                         err.status.should.equal(400)
                         err.should.have.property('message')
                         err.message.should.be.a('string')
-                        err.message.should.equal('Product mush have price')
+                        err.message.should.equal('Product must have price')
                         done()
                     });
             })
@@ -136,7 +136,7 @@ describe('Product CRUD', function() {
                         err.status.should.equal(400)
                         err.should.have.property('message')
                         err.message.should.be.a('string')
-                        err.message.should.equal('Product mush have stock')
+                        err.message.should.equal('Product must have stock')
                         done()
                     });
             })

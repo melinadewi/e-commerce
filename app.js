@@ -24,5 +24,5 @@ app.use('/', routes)
 app.use(errorHandler)
 
 app.listen(port, function(){
-  console.log('Listening to port ', port)
+  console.log('Listening to port ' + port)
 })
