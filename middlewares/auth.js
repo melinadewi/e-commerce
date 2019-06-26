@@ -21,11 +21,21 @@ module.exports = {
             })
         }
     },
-    authorization(req, res, next){        
+    authorizationAdmin(req, res, next){
+        console.log("UNAUTHORIZED");
+        
+        console.log(req.decode)   
         if('admin' === req.decode.username){
+            next()
+        } else {
+            throw {code: 401, message: 'User not authorized'}
+        }
+    },
+    authorizationUser(req, res, next){        
+        if(req.decode.username && req.decode.username !== 'admin'){
             next()
         } else {
             throw {status: 401}
         }
-    }     
+    }    
 }
