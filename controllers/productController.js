@@ -12,7 +12,11 @@ class ProductController{
     static getProduct(req, res, next){
         Product.findOne({ _id: req.params.productId })
             .then(product => {
-                res.json(product)
+                if(!product){
+                    throw {code: 404, message: 'Product not found'}
+                } else {
+                    res.json(product)
+                }
             })
             .catch(next)
     }

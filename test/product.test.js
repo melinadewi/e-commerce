@@ -3,7 +3,8 @@ const chaiHttp = require('chai-http');
 chai.use(chaiHttp)
 
 const app = require('../app')
-let id
+let id = '5d12e3467214b520cc0f849a'
+let notfoundId = '5d12e3467214b520cc0f8aaa'
 let token
 let unauthorizedToken
 chai.should()
@@ -184,7 +185,7 @@ describe('Product CRUD', function() {
                         });
                 })
             })
-            describe.only('POST /product not by authorized user', function() {
+            describe('POST /product not by authorized user', function() {
                 it('should throw an error of unauthorized user', function(done){
                     chai.request(app)
                         .post('/product')
@@ -269,9 +270,8 @@ describe('Product CRUD', function() {
         describe('GET /product/:productId error', function() {
             it('should throw an error when product id is not in the list', function(done){
                 chai.request(app)
-                    .get(`/product/1`)
+                    .get(`/product/${notfoundId}`)
                     .then(function(err) {
-                        console.log("errBody from get productid", err.body)
                         err.should.have.property('status')
                         err.status.should.be.a('number')
                         err.status.should.equal(404)
@@ -287,7 +287,7 @@ describe('Product CRUD', function() {
         })
     })
     
-    describe('PATCH /product/:productId', function() {
+    describe.only('PATCH /product/:productId', function() {
         describe('PATCH /product/:productId success', function() {
             it('should update an object with 200 status code', function(done){
                 chai.request(app)
@@ -296,6 +296,7 @@ describe('Product CRUD', function() {
                     .send({ description: `laptop baru`,
                             price: 1000})
                     .then(function(res){
+                        console.log("Res.body", res.body)
                         res.body.should.be.an('object')
                         res.body.should.have.property('_id')
                         res.body._id.should.equal(id)
@@ -322,7 +323,7 @@ describe('Product CRUD', function() {
             describe('PATCH /product/:productId not found', function() {
                 it('should throw an error when product id is not in the list', function(done){
                     chai.request(app)
-                        .patch(`/product/1`)
+                        .patch(`/product/${notfoundId}`)
                         .set('token', token)
                         .send({ description: `laptop aja`,
                                 price: 1000})
