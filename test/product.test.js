@@ -3,14 +3,14 @@ const chaiHttp = require('chai-http');
 chai.use(chaiHttp)
 
 const app = require('../app')
-let id = '5d12e3467214b520cc0f849a'
-let notfoundId = '5d12e3467214b520cc0f8aaa'
+let id
+let notfoundId
 let token
 let unauthorizedToken
 chai.should()
 
 const testProduct = {
-    name: 'S430FN',
+    name: 'A412FN',
     description: `laptop`,
     price: 14200000,
     stock: 5
@@ -22,7 +22,7 @@ const { name, description, price, stock } = testProduct
 //     clearProduct({name}, done)
 // })
 
-describe.only('Login admin', function(){
+describe('Login admin', function(){
     it('Admin login', function(done){
         chai.request(app)
             .post('/user/login')
@@ -39,7 +39,7 @@ describe.only('Login admin', function(){
             })
     })
 })
-describe.only('Login user', function(){
+describe('Login user', function(){
     it('User login', function(done){
         chai.request(app)
             .post('/user/login')
@@ -71,6 +71,7 @@ describe('Product CRUD', function() {
                         res.body.should.be.an('object')
                         res.body.should.have.property('_id')
                         id = res.body._id
+                        notfoundId = 'aaaa' + res.body._id.slice(4)
                         res.body.should.have.property('name')
                         res.body.name.should.be.a('string')
                         res.body.name.should.equal(name)
@@ -195,12 +196,12 @@ describe('Product CRUD', function() {
                                 stock})
                         .set('token', unauthorizedToken)
                         .then(function(err) {
-                            err.body.message.should.have.property('status')
-                            err.body.message.status.should.be.a('number')
-                            err.body.message.status.should.equal(401)
+                            err.should.have.property('status')
+                            err.status.should.be.a('number')
+                            err.status.should.equal(401)
                             err.body.should.have.property('message')
-                            err.body.message.message.should.be.a('string')
-                            err.body.message.message.should.equal('User not authorized')
+                            err.body.message.should.be.a('string')
+                            err.body.message.should.equal('User not authorized')
                             done()
                         })
                         .catch(function(err) {
@@ -287,7 +288,7 @@ describe('Product CRUD', function() {
         })
     })
     
-    describe.only('PATCH /product/:productId', function() {
+    describe('PATCH /product/:productId', function() {
         describe('PATCH /product/:productId success', function() {
             it('should update an object with 200 status code', function(done){
                 chai.request(app)
@@ -296,22 +297,16 @@ describe('Product CRUD', function() {
                     .send({ description: `laptop baru`,
                             price: 1000})
                     .then(function(res){
-                        console.log("Res.body", res.body)
                         res.body.should.be.an('object')
-                        res.body.should.have.property('_id')
-                        res.body._id.should.equal(id)
-                        res.body.should.have.property('name')
-                        res.body.name.should.be.a('string')
-                        res.body.name.should.equal('S430FN')
-                        res.body.should.have.property('description')
-                        res.body.description.should.be.a('string')
-                        res.body.description.should.equal('laptop baru')
-                        res.body.should.have.property('price')
-                        res.body.price.should.be.a('number')
-                        res.body.price.should.equal(1000)
-                        res.body.should.have.property('stock')
-                        res.body.stock.should.be.a('number')
-                        res.body.stock.should.equal(5)
+                        res.body.should.have.property('n')
+                        res.body.n.should.be.a('number')
+                        res.body.n.should.equal(1)
+                        res.body.should.have.property('nModified')
+                        res.body.nModified.should.be.a('number')
+                        res.body.nModified.should.equal(1)
+                        res.body.should.have.property('ok')
+                        res.body.ok.should.be.a('number')
+                        res.body.ok.should.equal(1)
                         done()
                     })
                     .catch(function(err) {
@@ -345,15 +340,16 @@ describe('Product CRUD', function() {
                 it('should throw an error of unauthorized user', function(done){
                     chai.request(app)
                         .patch(`/product/1`)
+                        .set('token', unauthorizedToken)
                         .send({ description: `laptop aja`,
                                 price: 1000})
                         .then(function(err) {
-                            err.body.message.should.have.property('status')
-                            err.body.message.status.should.be.a('number')
-                            err.body.message.status.should.equal(401)
+                            err.should.have.property('status')
+                            err.status.should.be.a('number')
+                            err.status.should.equal(401)
                             err.body.should.have.property('message')
-                            err.body.message.message.should.be.a('string')
-                            err.body.message.message.should.equal('User not authorized')
+                            err.body.message.should.be.a('string')
+                            err.body.message.should.equal('User not authorized')
                             done()
                         })
                         .catch(function(err) {
@@ -402,10 +398,11 @@ describe('Product CRUD', function() {
                 it('should throw an error of unauthorized user', function(done){
                     chai.request(app)
                         .delete(`/product/${id}`)
+                        .set('token', unauthorizedToken)
                         .then(function(err) {
-                            err.body.message.should.have.property('status')
-                            err.body.message.status.should.be.a('number')
-                            err.body.message.status.should.equal(401)
+                            err.should.have.property('status')
+                            err.status.should.be.a('number')
+                            err.status.should.equal(401)
                             err.body.should.have.property('message')
                             err.body.message.should.be.a('string')
                             err.body.message.should.equal('User not authorized')

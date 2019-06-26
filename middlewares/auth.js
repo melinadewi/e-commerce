@@ -22,9 +22,7 @@ module.exports = {
         }
     },
     authorizationAdmin(req, res, next){
-        console.log("UNAUTHORIZED");
-        
-        console.log(req.decode)   
+        console.log("AUTHORIZATION ADMIN");
         if('admin' === req.decode.username){
             next()
         } else {
