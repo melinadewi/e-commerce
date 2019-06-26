@@ -13,16 +13,6 @@ module.exports = {
             })
     },
 
-    clearProduct(input){
-        Product.deleteOne(input)
-            .then(function(){
-                console.log('Product test deleted')
-            })
-            .catch(function(err){
-                console.log(err)
-            })
-    },
-
     clearCart(input){
         Cart.deleteOne(input)
             .then(function(){

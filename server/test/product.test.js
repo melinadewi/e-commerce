@@ -17,11 +17,6 @@ const testProduct = {
 }
 const { name, description, price, stock } = testProduct
 
-// const { clearProduct } = require('../helpers/clearMocha')
-// after(function(done){
-//     clearProduct({name}, done)
-// })
-
 describe('Login admin', function(){
     it('Admin login', function(done){
         chai.request(app)
@@ -58,7 +53,7 @@ describe('Login user', function(){
 })
 
 describe('Product CRUD', function() {
-    this.timeout(8000)
+    this.timeout(5000)
     describe('POST /product', function() {
         describe('POST /product success', function(){
             it('should send an object with 201 status code', function(done){

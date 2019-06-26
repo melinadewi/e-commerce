@@ -2,7 +2,6 @@ const router = require('express').Router()
 const productController = require('../controllers/productController')
 const { authentication, authorizationAdmin } = require('../middlewares/auth')
 
-console.log("Masuk ke route product")
 router.get('/', productController.getAllProduct)
 router.get('/:productId', productController.getProduct)
 router.use(authentication)

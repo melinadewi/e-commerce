@@ -22,18 +22,18 @@ module.exports = {
         }
     },
     authorizationAdmin(req, res, next){
-        console.log("AUTHORIZATION ADMIN");
         if('admin' === req.decode.username){
             next()
         } else {
             throw {code: 401, message: 'User not authorized'}
         }
     },
-    authorizationUser(req, res, next){        
+    authorizationUser(req, res, next){
+        console.log("AUTHORIZATION USER");       
         if(req.decode.username && req.decode.username !== 'admin'){
             next()
         } else {
-            throw {status: 401}
+            throw {code: 401, message: 'User not authorized'}
         }
     }    
 }

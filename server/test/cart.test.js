@@ -5,18 +5,19 @@ chai.use(chaiHttp)
 const app = require('../app')
 let id
 let token
-const should = chai.should()
+chai.should()
 
-
-describe('Login user', function(){
-    it('User login', function(){
+describe.only('Login user', function(){
+    it('User login', function(done){
         chai.request(app)
             .post('/user/login')
-            .send({ email: '',
-                    password: '',
+            .send({ 
+                email: 'mail1@mail.com',
+                password: '123456'
             })
-            .then((res)=>{
-                token = res.token
+            .then(res=>{
+                token = res.body.token
+                done()
             })
             .catch(err=>{
                 console.log(err)
@@ -25,8 +26,9 @@ describe('Login user', function(){
 })
 
 describe('Cart CRUD', function() {
+    this.timeout(5000)
     describe('POST /cart new cart', function() {
-        describe('POST /cart success', function(){
+        describe.only('POST /cart success', function(){
             it('should send an object with 201 status code', function(done){
                 chai.request(app)
                     .post('/cart')
