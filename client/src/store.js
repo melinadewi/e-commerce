@@ -13,8 +13,7 @@ export default new Vuex.Store({
     products: [],
     selectedProduct: {},
     user: {},
-    cartitems: [],
-    cartquantity: []
+    carts: {}
   },
   mutations: {
     SET_PRODUCTS(state, payload){
@@ -24,8 +23,10 @@ export default new Vuex.Store({
       state.selectedProduct = payload
     },
     SET_CART(state, payload){
-      state.cartitems = payload.items
-      state.cartquantity = payload.quantity
+      state.carts = payload
+      for(let i = 0; i < state.carts.items.length; i++){
+        state.carts.items[i].quantity = payload.quantity[i]
+      }
     }
   },
   actions: {
@@ -68,7 +69,7 @@ export default new Vuex.Store({
       })
         .then(({ data }) => {
           console.log("on cart", data)
-          if(!data.user){            
+          if(!data.user){
             this.dispatch('CREATE_CART')
           } else {
             context.commit('SET_CART', data)
@@ -79,7 +80,6 @@ export default new Vuex.Store({
         })
     },
     ADD_ITEMS(context, payload){
-      console.log(payload)
       axios({
         method: 'PATCH',
         url: `${this.state.baseUrl}/cart/add`,
@@ -91,6 +91,7 @@ export default new Vuex.Store({
         }
       })
         .then(() => {
+          this.dispatch('GET_CART')
         })
         .catch(({ response }) => {
           console.log('Get Product error:', response)
@@ -108,6 +109,7 @@ export default new Vuex.Store({
         }
       })
         .then(() => {
+          this.dispatch('GET_CART')
         })
         .catch(({ response }) => {
           console.log('Get Product error:', response.data)
@@ -125,6 +127,7 @@ export default new Vuex.Store({
         }
       })
         .then(() => {
+          this.dispatch('GET_CART')
         })
         .catch(({ response }) => {
           console.log('Get Product error:', response.data)

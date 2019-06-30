@@ -2,7 +2,7 @@
   <div>
     <h2>Your Cart</h2><br>
     <b-table
-      :items="$store.state.cart"
+      :items="$store.state.carts.items"
       :fields="fields"
       :sort-desc.sync="sortDesc"
     >
@@ -31,24 +31,19 @@ export default {
         { key: 'price', sortable: true },
         { key: 'quantity', sortable: true },
         { key: 'action' }
-      ]
+      ],
+      cartitems: {}
     }
   },
   methods: {
     add (item, button) {
-      console.log(item)
-      this.$store.dispatch('ADD_ITEMS', item)
-      this.$store.dispatch('GET_PRODUCTS')
+      this.$store.dispatch('ADD_ITEMS', item._id)
     },
     reduce (item, button) {
-      console.log(item)
-      this.$store.dispatch('ADD_ITEMS', item)
-      this.$store.dispatch('GET_PRODUCTS')
+      this.$store.dispatch('REDUCE_ITEMS', item._id)
     },
     deleteItem (item, button) {
-      console.log(item)
-      this.$store.dispatch('DELETE_ITEMS_CART', item)
-      this.$store.dispatch('GET_PRODUCTS')
+      this.$store.dispatch('DELETE_ITEMS_CART', item._id)
     }
   }
 }

@@ -8,7 +8,7 @@ class CartController{
                     return Cart.findOne({
                             user: req.decode.id,
                             status: false
-                        })
+                        }).populate('items')
                 } else {
                     throw({code: 404, message: 'User not logged in'})
                 }
@@ -31,7 +31,6 @@ class CartController{
         Cart.create({user: req.decode.id, status:false})
             .then( result => {
                 res.status(201).json(result)
-                console.log(result)
                 console.log('Cart created')
             })
             .catch(next)
@@ -101,16 +100,16 @@ class CartController{
                 cartMod = cart
                 items = cart.items
                 quantity = cart.quantity
-                return Product.findOne({ _id: req.body._id })
+                return Product.findOne({ _id: req.body.id })
             })
             .then(product => {
                 if(product){
                     let indexDelete
                     for(let i = 0; i < cartMod.items.length; i++){
-                        if(cartMod.items[i] === product._id){
+                        if(cartMod.items[i] == req.body.id){
                             inCart = true
                             quantity[i]--
-                            if(quantity[i] === 0){
+                            if(quantity[i] <= 0){
                                 indexDelete = i + ''
                             }
                         }
@@ -156,13 +155,13 @@ class CartController{
                 cartMod = cart
                 items = cart.items
                 quantity = cart.quantity
-                return Product.findOne({ _id: req.body._id })
+                return Product.findOne({ _id: req.body.id })
             })
             .then(product => {
                 if(product){
                     let indexDelete
                     for(let i = 0; i < cartMod.items.length; i++){
-                        if(cartMod.items[i] === product._id){
+                        if(cartMod.items[i] == req.body.id){
                             inCart = true
                             quantity[i] = 0
                             indexDelete = i + ''
