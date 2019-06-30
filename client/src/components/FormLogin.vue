@@ -76,9 +76,10 @@ export default {
           this.$router.push('/product/list')
           if(this.form.email !== 'admin@mail.com'){ // before admin page created
             dispatch('GET_CART')
-            if(!state.cart){
-              dispatch('CREATE_CART')
-            }
+            // if(!state.cart){
+            //   console.log(state.cart)
+            //   dispatch('CREATE_CART')
+            // }
           }
         })
         .catch(({ response }) => {

@@ -48,9 +48,7 @@ export default {
     deleteItem (item, button) {
       console.log(item)
       this.$store.dispatch('DELETE_ITEMS_CART', item)
-    },
-    updateCart(item){
-      console.log(item)
+      this.$store.dispatch('GET_PRODUCTS')
     }
   }
 }

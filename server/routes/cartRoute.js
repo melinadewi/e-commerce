@@ -9,5 +9,6 @@ router.patch('/add', cartController.addToCart)
 router.patch('/reduce', cartController.reduce)
 router.patch('/delete', cartController.deleteItem)
 router.delete('/:cartId', cartController.deleteCart)
+router.get('/getallcart', cartController.getAllCart)
 
 module.exports = router

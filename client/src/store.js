@@ -68,26 +68,32 @@ export default new Vuex.Store({
       })
         .then(({ data }) => {
           console.log("on cart", data)
-          context.commit('SET_CART', data)
+          if(!data.user){            
+            this.dispatch('CREATE_CART')
+          } else {
+            context.commit('SET_CART', data)
+          }
         })
         .catch(({ response }) => {
           console.log('Get Product error:', response.data)
         })
     },
     ADD_ITEMS(context, payload){
+      console.log(payload)
       axios({
         method: 'PATCH',
         url: `${this.state.baseUrl}/cart/add`,
         headers: {
           token: this.state.token
         },
-        data: payload
+        data: {
+          id: payload
+        }
       })
-        .then(({ data }) => {
-          this.GET_PRODUCTS()
+        .then(() => {
         })
         .catch(({ response }) => {
-          console.log('Get Product error:', response.data)
+          console.log('Get Product error:', response)
         })
     },
     REDUCE_ITEMS(context, payload){
@@ -97,10 +103,11 @@ export default new Vuex.Store({
         headers: {
           token: this.state.token
         },
-        data: payload
+        data: {
+          id: payload
+        }
       })
-        .then(({ data }) => {
-          this.GET_PRODUCTS()
+        .then(() => {
         })
         .catch(({ response }) => {
           console.log('Get Product error:', response.data)
@@ -113,10 +120,11 @@ export default new Vuex.Store({
         headers: {
           token: this.state.token
         },
-        data: payload
+        data: {
+          id: payload
+        }
       })
-        .then(({ data }) => {
-          this.GET_PRODUCTS()
+        .then(() => {
         })
         .catch(({ response }) => {
           console.log('Get Product error:', response.data)
