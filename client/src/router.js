@@ -1,6 +1,10 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Product from './views/Product.vue'
+import FormAddProduct from '@/components/FormAddProduct.vue'
+import FormEditProduct from '@/components/FormEditProduct.vue'
+import ListProduct from '@/components/ListProduct.vue'
+
 import Form from '@/views/Form.vue'
 import FormLogin from '@/components/FormLogin.vue'
 import FormRegister from '@/components/FormRegister.vue'
@@ -13,17 +17,23 @@ export default new Router({
   base: process.env.BASE_URL,
   routes: [
     {
-      path: '/',
+      path: '/product',
       name: 'product',
-      component: Product
-    },
-    {
-      path: '/about',
-      name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (about.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import(/* webpackChunkName: "about" */ './views/About.vue')
+      component: Product,
+      children: [
+        {
+          path: 'list',
+          component: ListProduct
+        },
+        {
+          path: 'add',
+          component: FormAddProduct
+        },
+        {
+          path: 'edit',
+          component: FormEditProduct
+        }
+      ]
     },
     {
       path: '/user',

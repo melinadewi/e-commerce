@@ -15,9 +15,8 @@ router.get('/', productController.getAllProduct)
 router.get('/:productId', productController.getProduct)
 router.use(authentication)
 router.use(authorizationAdmin)
-router.post('/', multer.single(''), gcsMiddlewares.sendUploadToGCS, productController.addProduct)
-// router.post('/', productController.addProduct)
-router.patch('/:productId', productController.update)
+router.post('/', multer.single('file'), gcsMiddlewares.sendUploadToGCS, productController.addProduct)
+router.patch('/:productId', multer.single('file'), gcsMiddlewares.sendUploadToGCS, productController.update)
 router.delete('/:productId', productController.delete)
 
 module.exports = router

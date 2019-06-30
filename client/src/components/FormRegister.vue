@@ -45,9 +45,6 @@
       <b-button type="submit" variant="primary">Register</b-button><br><br>
       <router-link to="/user/login">Already a member? Login here!</router-link>
     </b-form>
-    <b-card class="mt-3" header="Form Data Result">
-      <pre class="m-0">{{ form }}</pre>
-    </b-card>
   </div>
 </template>
 
@@ -72,8 +69,14 @@ export default {
       let baseUrl = state.baseUrl
       axios.post(`${baseUrl}/user/register`, this.form)
         .then(() => {
-          this.$router.push('/user/login')
+          Swal.fire({
+            type: 'success',
+            title: 'Registration success!',
+            showConfirmButton: false,
+            timer: 1000
+          })
           console.log('Register success')
+          this.$router.push('/user/login')
           this.form.username = ''
           this.form.email = ''
           this.form.password = ''

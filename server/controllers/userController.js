@@ -37,7 +37,8 @@ class UserController{
                         const token = generateToken(payload)
                         res.json({
                             token,
-                            username: user.username
+                            username: user.username,
+                            email: user.email
                         })
                     } else {
                         throw({code: 400, message: 'Email/Password invalid!'})

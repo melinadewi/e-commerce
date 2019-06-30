@@ -31,9 +31,6 @@
       <b-button type="submit" variant="primary">Login</b-button><br><br>
       <router-link to="/user/register">Not a member? Register now!</router-link>
     </b-form>
-    <b-card class="mt-3" header="Form Data Result">
-      <pre class="m-0">{{ form }}</pre>
-    </b-card>
   </div>
 </template>
 
@@ -53,14 +50,36 @@ export default {
   },
   methods: {
     onSubmit () {
-      let { state } = this.$store
+      let { state, dispatch } = this.$store
       let baseUrl = state.baseUrl
       axios.post(`${baseUrl}/user/login`, this.form)
-        .then(() => {
+        .then(({data}) => {
           this.$router.push('/')
+          state.token = data.token
+          localStorage.setItem('token', data.token)
+          localStorage.setItem('username', data.username)
+          localStorage.setItem('email', data.email)
+          state.user = {
+            username: data.username,
+            email: data.email
+          }
+          console.log(state.user)
+          Swal.fire({
+            type: 'success',
+            title: 'Login success!',
+            showConfirmButton: false,
+            timer: 1500
+          })
           console.log('Login success')
           this.form.email = ''
           this.form.password = ''
+          this.$router.push('/product/list')
+          if(this.form.email !== 'admin@mail.com'){ // before admin page created
+            dispatch('GET_CART')
+            if(!state.cart){
+              dispatch('CREATE_CART')
+            }
+          }
         })
         .catch(({ response }) => {
           console.log('Login error:', response.data.message)

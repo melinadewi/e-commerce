@@ -12,7 +12,7 @@ class CartController{
                 } else {
                     throw({code: 404, message: 'User not logged in'})
                 }
-            })            
+            })
             .then(cart => {
                 console.log(cart)
                 if(cart.length !== 0){
@@ -24,50 +24,170 @@ class CartController{
             .catch(next)
     }
 
-    static addCart(req, res, next){
-        Product.findOne({ _id: req.body._id })
-            .then(product => {
-                if(product){    
-                    const input = { 
-                        user: req.decode.id,
-                        items: [product],
-                        quantity: [1],
-                        status: false
-                    }
-                    return Cart.create(input)
-                } else {
-                    throw({code: 404, message: 'Product not found' })
-                }
-            })
-            .then(result => {
+    static createCart(req, res, next){
+        Cart.create({userId: req.decode.id})
+            .then( result => {
                 res.status(201).json(result)
             })
             .catch(next)
     }
 
-    static update(req, res, next){
+    static addToCart(req, res, next){
+        let searchObj
+        let items
+        let quantity
+        let inCart = false
         Cart.findOne({
             user: req.decode.id,
             status: false
         })
             .then(cart => {
-                if(cart){
-                    let updateObj = {}
-                    let updateKeys = Object.keys(req.body)
-                    for(let i = 0; i < updateKeys.length; i++){
-                        updateObj[updateKeys[i]] = req.body[updateKeys[i]]
+                searchObj = { _id: cart._id }
+                items = cart.items
+                quantity = cart.quantity
+                return Product.findOne({ _id: req.body._id })
+            })
+            .then(product => {
+                if(product){
+                    for(let i = 0; i < items.length; i++){
+                        if(items[i] === product._id){
+                            inCart = true
+                            quantity[i]++
+                        }
                     }
-                    let setObj = {
+                    if(!inCart){
+                        items.push(product._id)
+                        quantity.push(1)
+                    }
+                    const updateObj = { items, quantity }
+                    const setObj = {
                         $set: updateObj
                     }
-                    return Cart.updateOne(cart, setObj)
+                    return Cart.updateOne(searchObj, setObj)
                 } else {
-                    throw({code: 401, message: 'Cart not found' })
+                    throw({code: 404, message: 'Product not found' })
                 }
             })
             .then(result => {
                 if(!result || result.n === 0){
-                    throw {code: 401, message: 'Cart not found'}
+                    throw {code: 404, message: 'Cart not found'}
+                } else {
+                    res.json(result)
+                }
+            })
+            .catch(next)
+    }
+
+    static reduce(req, res, next){
+        let searchObj
+        let items
+        let quantity
+        let inCart = false
+        Cart.findOne({
+            user: req.decode.id,
+            status: false
+        })
+            .then(cart => {
+                searchObj = { _id: cart._id }
+                items = cart.items
+                quantity = cart.quantity
+                return Product.findOne({ _id: req.body._id })
+            })
+            .then(product => {
+                if(product){
+                    let indexDelete
+                    for(let i = 0; i < items.length; i++){
+                        if(items[i] === product._id){
+                            inCart = true
+                            quantity[i]--
+                            if(quantity[i] === 0){
+                                indexDelete = i
+                            }
+                        }
+                    }
+                    if(indexDelete){
+                        items.splice(indexDelete, 1)
+                        quantity.splice(indexDelete, 1)
+                    }
+                    if(!inCart){
+                        throw {code: 404, message: 'Product not found in your cart'}
+                    }
+                    const updateObj = { items, quantity }
+                    const setObj = {
+                        $set: updateObj
+                    }
+                    return Cart.updateOne(searchObj, setObj)
+                } else {
+                    throw({code: 404, message: 'Product not found' })
+                }
+            })
+            .then(result => {
+                if(!result || result.n === 0){
+                    throw {code: 404, message: 'Cart not found'}
+                } else {
+                    res.json(result)
+                }
+            })
+            .catch(next)
+    }
+
+    static deleteItem(req, res, next){
+        let searchObj
+        let items
+        let quantity
+        let inCart = false
+        Cart.findOne({
+            user: req.decode.id,
+            status: false
+        })
+            .then(cart => {
+                searchObj = { _id: cart._id }
+                items = cart.items
+                quantity = cart.quantity
+                return Product.findOne({ _id: req.body._id })
+            })
+            .then(product => {
+                if(product){
+                    let indexDelete
+                    for(let i = 0; i < items.length; i++){
+                        if(items[i] === product._id){
+                            inCart = true
+                            quantity[i] = 0
+                            indexDelete = i
+                        }
+                    }
+                    items.splice(indexDelete, 1)
+                    quantity.splice(indexDelete, 1)
+                    if(!inCart){
+                        throw {code: 404, message: 'Product not found in your cart'}
+                    }
+                    const updateObj = { items, quantity }
+                    const setObj = {
+                        $set: updateObj
+                    }
+                    return Cart.updateOne(searchObj, setObj)
+                } else {
+                    throw({code: 404, message: 'Product not found' })
+                }
+            })
+            .then(result => {
+                if(!result || result.n === 0){
+                    throw {code: 404, message: 'Cart not found'}
+                } else {
+                    res.json(result)
+                }
+            })
+            .catch(next)
+    }
+
+    static deleteCart(req, res, next){
+        let searchObj = {
+            _id: req.params.cartId
+        }
+        Cart.deleteOne(searchObj)
+            .then(result => {
+                if(!result || result.n === 0){
+                    throw {code: 404, message: 'Cart not found'}
                 } else {
                     res.json(result)
                 }
