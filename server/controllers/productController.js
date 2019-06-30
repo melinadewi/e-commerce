@@ -24,6 +24,9 @@ class ProductController{
     static addProduct(req, res, next){
         const { name, description, price, stock } = req.body
         const input = { name, description, price, stock }
+        if(req.file){
+            input.imgUrl = req.file.gcsUrl
+        }
         Product.create(input)
             .then(result => {
                 res.status(201).json(result)

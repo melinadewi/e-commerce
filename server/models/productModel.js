@@ -21,6 +21,10 @@ const ProductSchema = new Schema({
         type: String,
         required: [true, 'Product must have description']
     },
+    imgUrl:  {
+        type: String,
+        required: [true, 'Product must have image']
+    },
     price:  {
         type: Number,
         required: [true, 'Product must have price']

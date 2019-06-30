@@ -9,6 +9,7 @@ const routes = require('./routes')
 const cors = require('cors')
 const mongoose = require('mongoose')
 const url = 'mongodb://localhost:27017/e-commerce-' + process.env.NODE_ENV
+//const url = process.env.MONGO_DB_URI
 
 const errorHandler = require('./middlewares/error-handler')
 mongoose.connect(url, {useNewUrlParser: true}, function(err){
