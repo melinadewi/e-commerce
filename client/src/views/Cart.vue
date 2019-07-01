@@ -6,6 +6,9 @@
       :fields="fields"
       :sort-desc.sync="sortDesc"
     >
+          <template slot="total_price" slot-scope="row">
+            {{ row.item.price*row.item.quantity }}
+        </template>
         <template slot="action" slot-scope="row">
             <b-button size="sm" @click="reduce(row.item, $event.target)" class="mr-1">
                 -
@@ -30,6 +33,7 @@ export default {
         { key: 'name', sortable: true },
         { key: 'price', sortable: true },
         { key: 'quantity', sortable: true },
+        { key: 'total_price', sortable: true },
         { key: 'action' }
       ],
       cartitems: {}

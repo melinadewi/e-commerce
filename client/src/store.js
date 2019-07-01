@@ -52,7 +52,6 @@ export default new Vuex.Store({
         }      
       })
         .then(({ data }) => {
-          console.log("on cart", data)
           context.commit('SET_CART', data)
         })
         .catch(({ response }) => {
@@ -68,7 +67,6 @@ export default new Vuex.Store({
         }
       })
         .then(({ data }) => {
-          console.log("on cart", data)
           if(!data.user){
             this.dispatch('CREATE_CART')
           } else {

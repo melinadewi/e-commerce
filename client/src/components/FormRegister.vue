@@ -71,7 +71,7 @@ export default {
         .then(() => {
           Swal.fire({
             type: 'success',
-            title: 'Registration success!',
+            title: 'Registration success! Login now!',
             showConfirmButton: false,
             timer: 1000
           })
